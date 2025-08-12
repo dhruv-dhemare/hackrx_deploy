@@ -1,8 +1,0 @@
-{
-  "name": "hackrx-fullstack",
-  "version": "1.0.0",
-  "scripts": {
-    "build": "cd frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt",
-    "start": "cd backend && nodemon server.js"
-  }
-}
