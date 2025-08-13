@@ -9,7 +9,7 @@ const app = express();
 const db = require('./db'); // now MONGO_URL will be available
 
 app.use(cors({
-    origin: 'http://localhost:5173', // Replace with your React port (default for Vite)
+    origin: 'https://hackrx-delulu-guys.netlify.app/', // Replace with your React port (default for Vite)
     credentials: true
 }));
 
