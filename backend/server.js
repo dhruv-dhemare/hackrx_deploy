@@ -10,8 +10,7 @@ const db = require('./db'); // MongoDB connection
 app.use(cors({
     origin: 'https://hackrx-delulu-guys.netlify.app', // ✅ No trailing slash
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 
 // ✅ Handle preflight requests
