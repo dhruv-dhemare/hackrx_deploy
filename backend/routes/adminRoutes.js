@@ -74,12 +74,18 @@ router.post("/upload-doc", upload.single("file"), async (req, res) => {
       path: file.path,
       contentType: file.mimetype,
     });
+    await admin_.save();
 
-    // --- 🔥 Trigger Python pipeline safely ---
+    // ✅ Send response immediately
+    res.status(200).json({
+      message: "File uploaded successfully. Indexing in background...",
+    });
+
+    // 🔹 Run Python script AFTER sending response
     const pythonScript = "D:/Projects/Chat_Bot_Rag/Final_ChatBot/chatbot_doc_5.py";
- // ✅ safe absolute path
-
-    const pyProcess = spawn("python", [pythonScript, file.path]);
+    const pyProcess = spawn("python", [pythonScript, file.path], {
+      env: { ...process.env, PYTHONUNBUFFERED: "1" }, // pass .env to Python
+    });
 
     pyProcess.stdout.on("data", (data) => {
       console.log(`📢 Python: ${data}`);
@@ -90,23 +96,15 @@ router.post("/upload-doc", upload.single("file"), async (req, res) => {
     });
 
     pyProcess.on("close", (code) => {
-      if (code === 0) {
-        res.status(200).json({
-          message: "Document uploaded & indexed successfully",
-        });
-      } else {
-        res.status(500).json({
-          error: "Document saved, but indexing failed.",
-        });
-      }
+      console.log(`✅ Python script finished with code ${code}`);
     });
-    
-    await admin_.save();
+
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+
 
 // -------------------- DELETE DOCUMENT --------------------
 router.delete("/delete-doc/:docName", async (req, res) => {
